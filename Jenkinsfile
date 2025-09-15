@@ -19,7 +19,7 @@ pipeline{
   stages {
     stage('Initialize') {
          steps {
-                sh 'export PATH=$PATH:/usr/local/bin/sf/bin'
+                //sh 'export PATH=$PATH:/usr/local/bin/sf/bin'
                 sh 'echo "Salesforce CLI Version:"'
                 sh  'sf --version'
                 sh 'echo "================================================="'
