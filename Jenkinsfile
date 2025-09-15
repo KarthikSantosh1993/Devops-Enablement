@@ -13,15 +13,17 @@ pipeline{
 
     SOURCE_BRANCH = "main" // Branch to compare for changes
     OUTPUT_DIR = "delta"   // Output directory for delta files
-}
+} // End of environment
+
+
   stages {
     stage('Initialize') {
          steps {
                 sh 'echo "Starting Salesforce Deployment Pipeline"' 
                 sh 'echo "Checking if sfdx-git-delta plugin is installed..."'
-                sh 'sfdx plugins --core | grep sfdx-git-delta || sfdx plugins:install sfdx-git-delta'  
-                }
-            }
+                sh 'sf plugins --core | grep sfdx-git-delta || sfdx plugins:install sfdx-git-delta'  
+                } 
+            } //End of Initialize stage
 
   //   stage('Authenticate to Orgs') {
   //        steps {
@@ -46,5 +48,7 @@ pipeline{
   //               sh "sfdx force:apex:test:run --targetusername qa-org --resultformat human --wait 10"
   //               }
   //        }         
-    }
-}
+    } // End of stages
+
+
+} // End of pipeline
