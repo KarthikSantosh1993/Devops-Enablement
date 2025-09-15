@@ -19,6 +19,11 @@ pipeline{
   stages {
     stage('Initialize') {
          steps {
+                sh 'export PATH=$PATH:/usr/local/bin/sf/bin'
+                sh 'echo "Salesforce CLI Version:"'
+                sh  'sf --version'
+                sh 'echo "================================================="'
+
                 sh 'echo "Starting Salesforce Deployment Pipeline"' 
                 sh 'echo "Checking if sfdx-git-delta plugin is installed..."'
                 sh 'sf plugins --core | grep sfdx-git-delta || sf plugins:install sfdx-git-delta'  
