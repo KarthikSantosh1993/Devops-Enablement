@@ -17,6 +17,20 @@ pipeline{
 
 
   stages {
+    stage('Install Salesforce CLI') {
+            steps {
+                sh '''
+                    # Install the Salesforce CLI using the Linux tarball installer
+                    wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJ -C ~/
+                    
+                    # Add the CLI to the PATH for the current shell session
+                    export PATH="$HOME/sfdx/bin:$PATH"
+                    
+                    # Verify the installation
+                    ~/sfdx/bin/sf version
+                '''
+            }
+        }
     stage('Initialize') {
          steps {
                 //sh 'export PATH=$PATH:/usr/local/bin/sf/bin'
