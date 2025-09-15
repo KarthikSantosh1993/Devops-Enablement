@@ -21,6 +21,7 @@ pipeline{
          steps {
                 //sh 'export PATH=$PATH:/usr/local/bin/sf/bin'
                 sh 'echo "Salesforce CLI Version:"'
+                sh 'echo $PATH'
                 sh  'sf --version'
                 sh 'echo "================================================="'
 
