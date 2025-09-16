@@ -47,7 +47,7 @@ pipeline {
             sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
 
             def deltaOutput = sh(
-                script: "$sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output ${OUTPUT_DIR}",
+                script: "$sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output-dir ${OUTPUT_DIR}",
                 returnStdout: true
             ).trim()
 
