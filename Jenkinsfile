@@ -26,7 +26,7 @@ pipeline{
 
                 sh 'echo "Starting Salesforce Deployment Pipeline"' 
                 sh 'echo "Checking if sfdx-git-delta plugin is installed..."'
-                sh 'sf plugins --core | grep sfdx-git-delta || sf plugins:install sfdx-git-delta'  
+                sh '/usr/local/bin/sf plugins --core | grep sfdx-git-delta || /usr/local/bin/sf plugins:install sfdx-git-delta'  
                 } 
             } //End of Initialize stage
 
