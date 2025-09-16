@@ -47,8 +47,7 @@ pipeline {
             sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
 
             def deltaOutput = sh(
-                
-                sh "$sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output ${OUTPUT_DIR} --include ApexClass,ApexTrigger,CustomObject,Profile,PermissionSet",
+                sh "$sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output ${OUTPUT_DIR}
                 returnStdout: true
             ).trim()
 
