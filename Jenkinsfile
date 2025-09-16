@@ -11,7 +11,7 @@ pipeline {
     QA_ORG_USERNAME = credentials('b8ed0e2b-56cc-4a2a-9f27-301862a30d87')  // QA org username 
 
 
-    SOURCE_BRANCH = "main" // Branch to compare for changes
+    SOURCE_BRANCH = "origin/main" // Branch to compare for changes
 
     OUTPUT_DIR = "delta"   // Output directory for delta files
 
