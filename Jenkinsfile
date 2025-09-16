@@ -31,13 +31,12 @@ pipeline{
                 } 
             } //End of Initialize stage
 
-  //   stage('Authenticate to Orgs') {
-  //        steps {
-  //               sh "sfdx force:auth:jwt:grant --clientid $DEV_CONSUMER_KEY --jwtkeyfile $DEV_JWT_KEY_FILE --username $DEV_ORG_USERNAME --setdefaultusername --setalias dev-org"
-  //               sh "sfdx force:auth:jwt:grant --clientid $QA_CONSUMER_KEY --jwtkeyfile $QA_JWT_KEY_FILE --username $QA_ORG_USERNAME --setalias qa-org"
-  //               }
-  //        }
-  // }
+            stage('Authenticate to Orgs') {
+                steps {
+                        sh "sfdx force:auth:jwt:grant --clientid $DEV_CONSUMER_KEY --jwtkeyfile $DEV_JWT_KEY_FILE --username $DEV_ORG_USERNAME --setdefaultusername --setalias dev-org"
+                        sh "sfdx force:auth:jwt:grant --clientid $QA_CONSUMER_KEY --jwtkeyfile $QA_JWT_KEY_FILE --username $QA_ORG_USERNAME --setalias qa-org"
+                        }
+                } // End of Authenticate to Orgs stage
   //   stage('Generate Delta') {
   //        steps {
   //               sh "sfdx gdt:source:delta --to $SOURCE_BRANCH --output $OUTPUT_DIR --json > delta.json"
