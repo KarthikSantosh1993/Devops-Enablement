@@ -46,6 +46,7 @@ pipeline {
             
             sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
 
+            sh 'git branch --show-current' // Print the current branch for debugging
             def deltaOutput = sh(
                 script: "$sfdx sgd:source:delta --from $SOURCE_BRANCH --to HEAD --output-dir $OUTPUT_DIR",
                 returnStdout: true
