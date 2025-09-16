@@ -13,6 +13,7 @@ pipeline{
 
     SOURCE_BRANCH = "main" // Branch to compare for changes
     OUTPUT_DIR = "delta"   // Output directory for delta files
+    sf = '/usr/local/bin/sf'
 } // End of environment
   stages {
     
@@ -20,13 +21,13 @@ pipeline{
          steps {
                 sh 'export PATH=/usr/local/bin/sf'
                 sh 'echo "Salesforce CLI Version:"'
-                sh '/usr/local/bin/sf --version'
+                sh '$sf --version'
                
                 sh 'echo "================================================="'
 
                 sh 'echo "Starting Salesforce Deployment Pipeline"' 
                 sh 'echo "Checking if sfdx-git-delta plugin is installed..."'
-                sh '/usr/local/bin/sf plugins --core | grep sfdx-git-delta || /usr/local/bin/sf plugins:install sfdx-git-delta'  
+                sh '$sf plugins --core | grep sfdx-git-delta || $sf plugins:install sfdx-git-delta'  
                 } 
             } //End of Initialize stage
 
