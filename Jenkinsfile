@@ -14,14 +14,14 @@ pipeline{
     SOURCE_BRANCH = "main" // Branch to compare for changes
     OUTPUT_DIR = "delta"   // Output directory for delta files
 } // End of environment
+  tools {
+    customTool 'sf' // Ensure Salesforce CLI is available
+  }
 
   stages {
     
     stage('Initialize') {
          steps {
-
-                sh 'echo $TERM'
-                
                 sh 'export PATH=/usr/local/bin/sf/bin'
                 sh 'echo "Salesforce CLI Version:"'
                 sh 'echo $PATH'
