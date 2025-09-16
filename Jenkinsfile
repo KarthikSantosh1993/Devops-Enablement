@@ -27,6 +27,8 @@ pipeline {
         }
     stage('Authenticate to dev and qa orgs') {
          steps {
+              // Create output directory if it doesn't exist
+              
               //dev org authorization comand with alias flag
               sh "$sfdx force:auth:jwt:grant --client-id $DEV_CONSUMER_KEY --jwt-key-file $DEV_JWT_KEY_FILE  --username $DEV_ORG_USERNAME --alias dev-org"
 
@@ -38,14 +40,27 @@ pipeline {
 
     stage('Generate Delta Files') {
         steps {
-            // Ensure the repository is fully fetched; handle both shallow and non-shallow clones
-            sh "$sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output ${OUTPUT_DIR} --include ApexClass,ApexTrigger,CustomObject,Profile,PermissionSet"
-            // Debug: List contents of the delta output directory
-
-            sh "ls -R ${OUTPUT_DIR}"
-            // If no delta files were generated, print a message
+           script {
            
-            sh "if [ -z \"\$(ls -A ${OUTPUT_DIR})\" ]; then echo 'No changes detected. Nothing to deploy.'; fi"
+            sh "git fetch --unshallow || git fetch" // Ensure full history is available for comparison
+            
+            sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
+
+            def deltaOutput = sh(
+                
+                sh "$sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output ${OUTPUT_DIR} --include ApexClass,ApexTrigger,CustomObject,Profile,PermissionSet",
+                returnStdout: true
+            ).trim()
+
+            // Check if any changes were detected by parsing the JSON output.
+            if (deltaOutput == '{}') {
+                echo "No changes were detected between main and HEAD. No delta files were generated."
+            } else {
+                echo "Delta generation completed."
+                echo "Listing generated package files:"
+                sh "ls -R ${OUTPUT_DIR}"
+            }
+          }
         }
     }
   //   stage('Deploy to QA') {
