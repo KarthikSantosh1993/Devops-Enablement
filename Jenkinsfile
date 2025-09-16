@@ -42,7 +42,7 @@ pipeline {
         steps {
            script {
            
-            sh "git fetch --unshallow || git fetch" // Ensure full history is available for comparison
+            sh "git fetch --unshallow || true" // Ensure full history is available for comparison
             
             sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
 
