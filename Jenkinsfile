@@ -41,14 +41,11 @@ pipeline {
             // Ensure the repository is fully fetched; handle both shallow and non-shallow clones
             sh "sfdx sgd:source:delta --from ${SOURCE_BRANCH} --to HEAD --output ${OUTPUT_DIR} --include ApexClass,ApexTrigger,CustomObject,Profile,PermissionSet"
             // Debug: List contents of the delta output directory
-            
+
             sh "ls -R ${OUTPUT_DIR}"
             // If no delta files were generated, print a message
-            sh """
-                if [ -z "$(ls -A ${OUTPUT_DIR})" ]; then
-                    echo 'No changes detected. Nothing to deploy.'
-                fi
-            """
+           
+            sh "if [ -z \"\$(ls -A ${OUTPUT_DIR})\" ]; then echo 'No changes detected. Nothing to deploy.'; fi"
         }
     }
   //   stage('Deploy to QA') {
