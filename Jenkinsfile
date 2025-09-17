@@ -65,7 +65,7 @@ pipeline {
     }
     stage('Deploy to QA') {
          steps {
-                sh "$sf project deploy start --source-dir "$OUTPUT_DIR" --target-org qa-org --wait 10 --test-level RunLocalTests"
+                sh '$sf project deploy start --source-dir "$OUTPUT_DIR" --target-org qa-org --wait 10 --test-level RunLocalTests'
                 }
          }
   //   stage('Run Post-Deployment Tests') {
