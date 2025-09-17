@@ -70,11 +70,11 @@ pipeline {
 
     } // End of Generate Delta Files stage
   
-    // stage('Deploy to QA') {
-    //      steps {
-    //             sh '$sf project deploy start --source-dir "$OUTPUT_DIR" --target-org qa-org --wait 10 --test-level RunLocalTests'
-    //             }
-    //      } // End of Deploy to QA stage
+    stage('Deploy to QA') {
+         steps {
+                sh '$sf project deploy start --source-dir "$OUTPUT_DIR" --target-org qa-org --wait 10 --test-level RunLocalTests'
+                }
+         } // End of Deploy to QA stage
 
     stage('Run Post-Deployment Tests') {
          steps {
