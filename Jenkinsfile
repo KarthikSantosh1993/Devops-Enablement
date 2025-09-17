@@ -42,7 +42,7 @@ pipeline {
 
      } // End of Authenticate to Orgs stage
   
-    // stage('Generate Delta Files') { // Generate delta files using sfdx-git-delta
+ stage('Generate Delta Files') { // Generate delta files using sfdx-git-delta
         
         steps {
            script {          
