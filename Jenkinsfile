@@ -63,11 +63,11 @@ pipeline {
           }
         }
     }
-  //   stage('Deploy to QA') {
-  //        steps {
-  //               sh "sfdx force:source:deploy -p $OUTPUT_DIR --targetusername qa-org --wait 10 --testlevel RunLocalTests"
-  //               }
-  //        }
+    stage('Deploy to QA') {
+         steps {
+                sh "$sf project deploy start --source-dir "$OUTPUT_DIR" --target-org qa-org --wait 10 --test-level RunLocalTests"
+                }
+         }
   //   stage('Run Post-Deployment Tests') {
   //        steps {
   //               sh "sfdx force:apex:test:run --targetusername qa-org --resultformat human --wait 10"
