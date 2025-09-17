@@ -42,7 +42,7 @@ pipeline {
 
      } // End of Authenticate to Orgs stage
   
-    stage('Generate Delta Files') { // Generate delta files using sfdx-git-delta
+    // stage('Generate Delta Files') { // Generate delta files using sfdx-git-delta
         
         steps {
            script {          
@@ -50,7 +50,6 @@ pipeline {
             
             sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
 
-            sh 'git branch --show-current' // Print the current branch for debugging
             def deltaOutput = sh(
                 script: "$sfdx sgd:source:delta --from $SOURCE_BRANCH --to HEAD --output-dir $OUTPUT_DIR",
                 returnStdout: true
@@ -72,7 +71,7 @@ pipeline {
   
     stage('Deploy to QA') {
          steps {
-                sh '$sf project deploy start --source-dir force-app --target-org qa-org --wait 10 --test-level RunLocalTests'
+                sh '$sf project deploy start --source-dir ${OUTPUT_DIR} --target-org qa-org --wait 10 --test-level RunLocalTests'
                 }
          } // End of Deploy to QA stage
 
