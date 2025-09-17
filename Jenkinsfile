@@ -18,14 +18,18 @@ pipeline {
     sf = '/usr/local/bin/sf'
     sfdx = '/usr/local/bin/sfdx'
   }
-  stages {
-    stage('check sf version') {
+  stages { // Start of stages
+
+
+    stage('check sf version') {. // Check sf version and install sfdx-git-delta plugin if not present
         steps {
               sh '$sf --version'
               sh '$sfdx plugins --core |grep sfdx-git-delta || $sfdx plugins:install sfdx-git-delta' 
             }
-        }
-    stage('Authenticate to dev and qa orgs') {
+        } // End of check sf version stage
+
+    stage('Authenticate to dev and qa orgs') {  // Authenticate to Dev and QA orgs using JWT
+         
          steps {
               // Create output directory if it doesn't exist
               
@@ -34,14 +38,14 @@ pipeline {
 
               //qa org authorization command with alias flag
               sh "$sfdx force:auth:jwt:grant --client-id $QA_CONSUMER_KEY --jwt-key-file $QA_JWT_KEY_FILE --username $QA_ORG_USERNAME --alias qa-org"  
-       }    
+       }
+
      } // End of Authenticate to Orgs stage
   
-
-    stage('Generate Delta Files') {
+    stage('Generate Delta Files') {. // Generate delta files using sfdx-git-delta
+        
         steps {
-           script {
-           
+           script {          
             sh "git fetch --unshallow || true" // Ensure full history is available for comparison
             
             sh "mkdir -p ${OUTPUT_DIR}" // Ensure the output directory exists.
@@ -60,20 +64,24 @@ pipeline {
                 echo "Listing generated package files:"
                 sh "ls -R ${OUTPUT_DIR}"
             }
-          }
+
+          } // End of script block          
         }
-    }
+
+    } // End of Generate Delta Files stage
+  
     stage('Deploy to QA') {
          steps {
                 sh '$sf project deploy start --source-dir "$OUTPUT_DIR" --target-org qa-org --wait 10 --test-level RunLocalTests'
                 }
-         }
-  //   stage('Run Post-Deployment Tests') {
-  //        steps {
-  //               sh "sfdx force:apex:test:run --targetusername qa-org --resultformat human --wait 10"
-  //               }
-  //        }         
-    } // End of stages
+         } // End of Deploy to QA stage
 
+    stage('Run Post-Deployment Tests') {
+         steps {
+                sh '$sfdx force:apex:test:run --target-org qa-org --result-format human --wait 10'
+                }
+         } // End of Run Post-Deployment Tests stage
+
+    } // End of stages
 
 } // End of pipeline
