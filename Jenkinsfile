@@ -21,7 +21,7 @@ pipeline {
   stages { // Start of stages
 
 
-    stage('check sf version') {. // Check sf version and install sfdx-git-delta plugin if not present
+    stage('check sf version') { // Check sf version and install sfdx-git-delta plugin if not present
         steps {
               sh '$sf --version'
               sh '$sfdx plugins --core |grep sfdx-git-delta || $sfdx plugins:install sfdx-git-delta' 
@@ -42,7 +42,7 @@ pipeline {
 
      } // End of Authenticate to Orgs stage
   
-    stage('Generate Delta Files') {. // Generate delta files using sfdx-git-delta
+    stage('Generate Delta Files') { // Generate delta files using sfdx-git-delta
         
         steps {
            script {          
