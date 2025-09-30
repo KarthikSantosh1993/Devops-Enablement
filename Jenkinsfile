@@ -143,7 +143,7 @@ pipeline {
         always {
             echo 'Archiving PMD results'
             // Publish the JUnit XML results from the static code analysis.
-            junit 'scan-results/apex-scan-results.xml', allowEmptyResults: true
+            junit testResults: 'scan-results/apex-scan-results.xml', allowEmptyResults: true
 
             echo 'Pipeline finished. Logging out from Salesforce org...'
             // The '|| true' ensures this step doesn't fail the build if authorization failed.
