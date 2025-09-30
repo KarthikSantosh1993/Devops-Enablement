@@ -106,11 +106,37 @@ pipeline {
                 """
             }
         }
-    }
+    
+
+        stage('🔬 Static Code Analysis') {
+            steps {
+                script {
+                    // Ensure the output directory exists
+                    sh 'mkdir -p scan-results'
+
+                    // Run the SF scanner and output the results as a JUnit XML file.
+                    // The command will fail if any rule with severity 1, 2, or 3 is violated.
+                    sh """
+                        sf scanner run --target "./force-app" \
+                                    --category "Apex Security,Best Practices,Performance,Error Prone" \
+                                    --format junit \
+                                    --outfile "scan-results/apex-scan-results.xml" \
+                                    --engine pmd \
+                                    --severity-threshold 3
+                    """
+                }
+            }
+        } // End of Static Code Analysis stage
+    
+    } // End of stages
 
     // 4. Post-build Actions
     post {
         always {
+            echo 'Publishing static code analysis results...'
+            // Publish the JUnit XML results from the static code analysis.
+            junit 'scan-results/apex-scan-results.xml'
+
             echo 'Pipeline finished. Logging out from Salesforce org...'
             // The '|| true' ensures this step doesn't fail the build if authorization failed.
             sh "sfdx auth:logout --target-org $TARGET_ORG_ALIAS --no-prompt || true"
