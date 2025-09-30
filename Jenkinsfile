@@ -52,6 +52,7 @@ pipeline {
                 echo "Generating delta package against branch '$SOURCE_BRANCH'..."
                 sh "sfdx sgd source delta --to HEAD --from $SOURCE_BRANCH --output-dir ${OUTPUT_DIR}/"
                 
+                sh "cat ${OUTPUT_DIR}/package/package.xml"
                 script {
                     def directoryExists = sh(script: 'test -d delta-package/force-app', returnStatus: true) == 0
                     // dirExists is a built-in Jenkins step to check for a directory.
