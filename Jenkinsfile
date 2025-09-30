@@ -1,0 +1,98 @@
+// Jenkinsfile for Salesforce Delta Deployment
+// This version injects credentials using the top-level 'environment' block.
+
+pipeline {
+  agent { label 'salesforce-agent' } 
+  environment {
+    QA_JWT_KEY_FILE = credentials('2a9ccd87-eb8d-4a88-95b1-e70469f510bc')  // EC2 JWT key file for QA org
+    QA_CONSUMER_KEY = credentials('3dd72e62-1327-42ce-bed2-452d2092ccf7')  // EC2 Connected App Consumer Key for QA org   
+    QA_ORG_USERNAME = credentials('0d0f2b9c-87f5-42a1-ad7d-c402a975cf3d')  // EC2 QA org username 
+    SOURCE_BRANCH = "origin/main" // Branch to compare for changes
+    OUTPUT_DIR = "delta-package"   // Output directory for delta files
+    }
+  
+  
+    stages { // Start of stages
+        stage('Checkout Source Code') {
+            steps {
+                // Clean the workspace before checkout
+                cleanWs()
+
+                // Checkout a specific branch ('main' in this case)
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']], // <-- Specify the branch here
+                    userRemoteConfigs: [[url: 'https://github.com/KarthikSantosh1993/Devops-Enablement.git']]
+                ])
+                sh "echo git branch -a"
+            }
+        } //end of checkout stage
+        
+        stage('install sfdx-git-delta plugin') { // Check sf version and install sfdx-git-delta plugin if not present
+            steps {
+                sh 'sf --version'
+                sh 'sfdx plugins --core |grep sfdx-git-delta || echo y |sfdx plugins:install sfdx-git-delta'
+            }
+        } // End of check sf version stage
+        stage('Authenticate qa org') {  // Authenticate to QA org using JWT
+            steps {
+                echo "${QA_JWT_KEY_FILE}"
+                withCredentials([file(credentialsId: '2a9ccd87-eb8d-4a88-95b1-e70469f510bc', variable: 'QA_JWT_KEY_FILE')]) {
+                    sh "sf org login jwt --client-id $QA_CONSUMER_KEY --username $QA_ORG_USERNAME --jwt-key-file \"${QA_JWT_KEY_FILE}\" --alias qa-org"
+                }
+            }
+        } // End of Authenticate to Orgs stage
+        // STAGE: Generate Delta Package
+        stage('Generate Delta Package') {
+            steps {
+                sh "mkdir -p ${OUTPUT_DIR}"
+                echo "Generating delta package against branch '$SOURCE_BRANCH'..."
+                sh "sfdx sgd source delta --to HEAD --from $SOURCE_BRANCH --output-dir ${OUTPUT_DIR}/"
+                
+                sh "cd ${OUTPUT_DIR}/package"
+                sh " pwd"
+                
+                echo "The following components were changed:"
+                sh "cat ${OUTPUT_DIR}/package/package.xml"
+            }
+        } // End of Generate Delta Package stage
+
+        // STAGE: Validate Changes
+        stage('Validate Changes') {
+            steps {
+                echo "Validating deployment against org: qa-org""
+                sh """
+                    sfdx project:deploy:validate \\
+                      --target-org qa-org \\
+                      --source-dir delta-package/force-app \\
+                      --test-level RunLocalTests \\
+                      --wait 20
+                """
+            }
+        }
+
+        // STAGE: Deploy to Target Org
+        stage('Deploy to Target Org') {
+            steps {
+                echo "Deploying changes to org: ${env.SF_TARGET_ORG_ALIAS}..."
+                sh """
+                    sfdx project:deploy:start \\
+                      --target-org ${env.SF_TARGET_ORG_ALIAS} \\
+                      --source-dir delta-package/force-app \\
+                      --test-level RunLocalTests \\
+                      --wait 20
+                """
+            }
+        }
+    }
+
+    // 4. Post-build Actions
+    post {
+        always {
+            echo 'Pipeline finished. Logging out from Salesforce org...'
+            // The '|| true' ensures this step doesn't fail the build if authorization failed.
+            sh "sfdx auth:logout --target-org ${env.SF_TARGET_ORG_ALIAS} --no-prompt || true"
+            cleanWs()
+        }
+    }
+}
