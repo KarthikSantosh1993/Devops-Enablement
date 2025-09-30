@@ -55,7 +55,7 @@ pipeline {
                 script {
                     def directoryExists = sh(script: 'test -d delta-package/force-app', returnStatus: true) == 0
                     // dirExists is a built-in Jenkins step to check for a directory.
-                    if (dirExists('delta-package/force-app')) {
+                    if (directoryExists) {
                         echo "Changes found. Proceeding with validation and deployment."
                         // Set an environment variable to use in the 'when' block of later stages.
                         env.CHANGES_FOUND = 'true'
