@@ -5,8 +5,9 @@ pipeline {
   agent { label 'salesforce-agent' } 
   environment {
     QA_JWT_KEY_FILE = credentials('2a9ccd87-eb8d-4a88-95b1-e70469f510bc')  // EC2 JWT key file for QA org
-    QA_CONSUMER_KEY = credentials('3dd72e62-1327-42ce-bed2-452d2092ccf7')  // EC2 Connected App Consumer Key for QA org   
+    QA_CONSUMER_KEY = credentials('3dd72e62-1327-42ce-bed2-452d2092ccf7')  // EC2 Consumer Key for QA org   
     QA_ORG_USERNAME = credentials('0d0f2b9c-87f5-42a1-ad7d-c402a975cf3d')  // EC2 QA org username 
+   
     SOURCE_BRANCH = "origin/main" // Branch to compare for changes
     OUTPUT_DIR = "delta-package"   // Output directory for delta files
     }
@@ -60,7 +61,7 @@ pipeline {
         // STAGE: Validate Changes
         stage('Validate Changes') {
             steps {
-                echo "Validating deployment against org: qa-org""
+                echo "Validating deployment against org: qa-org"
                 sh """
                     sfdx project:deploy:validate \\
                       --target-org qa-org \\
@@ -74,10 +75,10 @@ pipeline {
         // STAGE: Deploy to Target Org
         stage('Deploy to Target Org') {
             steps {
-                echo "Deploying changes to org: ${env.SF_TARGET_ORG_ALIAS}..."
+                echo "Deploying changes to org: qa-org"
                 sh """
                     sfdx project:deploy:start \\
-                      --target-org ${env.SF_TARGET_ORG_ALIAS} \\
+                      --target-org qa-org \\
                       --source-dir delta-package/force-app \\
                       --test-level RunLocalTests \\
                       --wait 20
@@ -91,7 +92,7 @@ pipeline {
         always {
             echo 'Pipeline finished. Logging out from Salesforce org...'
             // The '|| true' ensures this step doesn't fail the build if authorization failed.
-            sh "sfdx auth:logout --target-org ${env.SF_TARGET_ORG_ALIAS} --no-prompt || true"
+            sh "sfdx auth:logout --target-org qa-org --no-prompt || true"
             cleanWs()
         }
     }
