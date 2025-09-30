@@ -111,7 +111,7 @@ pipeline {
         stage('install sfdx-scanner plugin if not installed') { // install sfdx-scanner if not present
             steps {
                 sh 'sf --version'
-                sh 'sfdx plugins --core |grep sfdx-scanner || echo y |sf plugins install @salesforce/sfdx-scanner
+                sh 'sfdx plugins --core |grep sfdx-scanner || echo y |sf plugins install @salesforce/sfdx-scanner'
             }
         } // End of install sfdx-delta plugin if not installed stage
         
