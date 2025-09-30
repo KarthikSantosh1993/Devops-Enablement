@@ -113,7 +113,7 @@ pipeline {
                 sh 'sf --version'
                 sh 'sfdx plugins --core |grep sfdx-scanner || echo y |sf plugins install @salesforce/sfdx-scanner'
             }
-        } // End of install sfdx-delta plugin if not installed stage
+        } // End of install sfdx-scanner plugin if not installed stage
         
 
         stage('🔬 Static Code Analysis') {
@@ -141,9 +141,9 @@ pipeline {
     // 4. Post-build Actions
     post {
         always {
-            echo 'Publishing static code analysis results...'
+            echo 'Archiving PMD results'
             // Publish the JUnit XML results from the static code analysis.
-            junit 'scan-results/apex-scan-results.xml'
+            junit 'scan-results/apex-scan-results.xml', allowEmptyResults: true
 
             echo 'Pipeline finished. Logging out from Salesforce org...'
             // The '|| true' ensures this step doesn't fail the build if authorization failed.
