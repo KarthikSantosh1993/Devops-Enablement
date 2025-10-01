@@ -18,7 +18,7 @@ pipeline {
         wipeWorkspace()
     }
   
-    // stages { // Start of stages
+    stages { // Start of stages
     //     stage('Checkout Source Code') {
     //         steps {
     //             // Clean the workspace before checkout
