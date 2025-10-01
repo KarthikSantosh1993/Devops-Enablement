@@ -12,7 +12,8 @@ pipeline {
     SOURCE_BRANCH = "origin/main" // Branch to compare for changes
     OUTPUT_DIR = "delta-package"   // Output directory for delta files
     }
-        
+
+    stages{    
         stage('install sfdx-git-delta plugin') { // Check sf version and install sfdx-git-delta plugin if not present
             steps {
                 sh 'sf --version'
