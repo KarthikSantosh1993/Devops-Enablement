@@ -40,9 +40,9 @@ pipeline {
         stage('Authenticate qa org') {  // Authenticate to QA org using JWT
             steps {
                 echo "${QA_JWT_KEY_FILE}"
-                withCredentials([file(credentialsId: 'd53b0f6d-35c8-4711-963c-84c4352dff0e', variable: 'QA_JWT_KEY_FILE')]) {
+                // withCredentials([file(credentialsId: 'd53b0f6d-35c8-4711-963c-84c4352dff0e', variable: 'QA_JWT_KEY_FILE')]) {
                     sh "sf org login jwt --client-id $QA_CONSUMER_KEY --username $QA_ORG_USERNAME --jwt-key-file \"${QA_JWT_KEY_FILE}\" --alias ${TARGET_ORG_ALIAS} --set-default"
-                }
+                // }
             }
         } // End of Authenticate to Orgs stage
         // STAGE: Generate Delta Package
