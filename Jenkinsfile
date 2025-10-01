@@ -13,11 +13,6 @@ pipeline {
     OUTPUT_DIR = "delta-package"   // Output directory for delta files
     }
   
-    options {
-        // This cleans the workspace before the agent starts
-        wipeWorkspace()
-    }
-  
     stages { // Start of stages
     //     stage('Checkout Source Code') {
     //         steps {
@@ -51,7 +46,7 @@ pipeline {
             steps {
                 sh "mkdir -p ${OUTPUT_DIR}"
                 echo "Generating delta package against branch '$SOURCE_BRANCH'..."
-                sh "git fetch --unshallow || git fetch"
+                sh "git fetch --unshallow || true" 
                 sh "sfdx sgd source delta --to HEAD --from $SOURCE_BRANCH --output-dir ${OUTPUT_DIR}/"
                 
                 sh "cat ${OUTPUT_DIR}/package/package.xml"
