@@ -4,9 +4,9 @@
 pipeline {
   agent { label 'salesforce-agent' } 
   environment {
-    QA_JWT_KEY_FILE = credentials('2a9ccd87-eb8d-4a88-95b1-e70469f510bc')  // EC2 JWT key file for QA org
-    QA_CONSUMER_KEY = credentials('3dd72e62-1327-42ce-bed2-452d2092ccf7')  // EC2 Consumer Key for QA org   
-    QA_ORG_USERNAME = credentials('0d0f2b9c-87f5-42a1-ad7d-c402a975cf3d')  // EC2 QA org username 
+    QA_JWT_KEY_FILE = credentials('d53b0f6d-35c8-4711-963c-84c4352dff0e')  // EC2 JWT key file for QA org
+    QA_CONSUMER_KEY = credentials('270eb719-d691-4964-9f30-1d751b925bc2')  // EC2 Consumer Key for QA org   
+    QA_ORG_USERNAME = credentials('3ac9adc2-7397-47e1-9e07-1ed3ea51c532')  // EC2 QA org username 
     
     TARGET_ORG_ALIAS = 'qa-org' // Alias for the target org
     SOURCE_BRANCH = "origin/main" // Branch to compare for changes
