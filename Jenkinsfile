@@ -12,22 +12,6 @@ pipeline {
     SOURCE_BRANCH = "origin/main" // Branch to compare for changes
     OUTPUT_DIR = "delta-package"   // Output directory for delta files
     }
-  
-    stages { // Start of stages
-    //     stage('Checkout Source Code') {
-    //         steps {
-    //             // Clean the workspace before checkout
-    //             cleanWs()
-
-    //             // Checkout a specific branch ('main' in this case)
-    //             checkout([
-    //                 $class: 'GitSCM',
-    //                 branches: [[name: '*/main']], // <-- Specify the branch here
-    //                 userRemoteConfigs: [[url: 'https://github.com/KarthikSantosh1993/Devops-Enablement.git']]
-    //             ])
-    //             sh "echo git branch -a"
-    //         }
-    //     } //end of checkout stage
         
         stage('install sfdx-git-delta plugin') { // Check sf version and install sfdx-git-delta plugin if not present
             steps {
@@ -68,7 +52,7 @@ pipeline {
                 }   
             }
         } // End of Generate Delta Package stage
-
+      
         
         // STAGE: Validate Changes
         stage('Validate Changes') {
